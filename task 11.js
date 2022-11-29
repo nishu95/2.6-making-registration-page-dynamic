@@ -16,7 +16,7 @@ function addlocal(e){
     };
 
     // network call to crudcrud
-    axios.post("https://crudcrud.com/api/04d26cfbfa11433e93946ca29e3c0afb/appointmentData",object)
+    axios.post("https://crudcrud.com/api/ff245ab1c87643bca788d9b17afd056b/appointmentData",object)
         .then((response)=>{
             showNewUserOnTheScreen(response.data);
             console.log(response);
@@ -106,17 +106,17 @@ document.addEventListener('DOMContentLoaded',refresh);
 function refresh(e){
     e.preventDefault();
     
-    
-    Object.keys(localStorage).forEach(function(key){
-        console.log(localStorage.getItem(key));
-        var my_objdesearialized=JSON.parse(localStorage.getItem(key));
-        console.log(my_objdesearialized.objname);
-        console.log(my_objdesearialized.objmail);
+    axios.get("https://crudcrud.com/api/ff245ab1c87643bca788d9b17afd056b/appointmentData")
+        .then((response)=>{
+            console.log(response.data);
 
-        showNewUserOnTheScreen(my_objdesearialized);
-    
-
-    });
+            for(var i=0;i<response.data.length;i++){
+                showNewUserOnTheScreen(response.data[i]);
+            }
+        })
+        .catch((error)=>{
+            console.log(error);
+        });
 }
 
 
