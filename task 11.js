@@ -10,13 +10,13 @@ function addlocal(e){
     var email=document.getElementById('email').value;
     //console.log(email);
 
-    let object={
-        objname:name,
-        objmail:email
+    const object={
+        name,
+        email
     };
 
     // network call to crudcrud
-    axios.post("https://crudcrud.com/api/ff245ab1c87643bca788d9b17afd056b/appointmentData",object)
+    axios.post("https://crudcrud.com/api/07c403bb41334e1d84af1380eb51c834/appointmentData",object)
         .then((response)=>{
             showNewUserOnTheScreen(response.data);
             console.log(response);
@@ -40,62 +40,33 @@ function addlocal(e){
 }
 
 function showNewUserOnTheScreen(obj){
-    //var my_objdesearialized=JSON.parse(localStorage.getItem(key));
-    //console.log(my_objdesearialized.objname);
-    //console.log(my_objdesearialized.objmail);
-
-    if(localStorage.getItem(obj.objmail)!==null){   // if the unique email exist in the UI list
-        removeUserFromScreen(obj.objmail);
-    }
-
-    var li=document.createElement('li');
-    li.className='tag';
-    li.id=obj.objmail;
-
-    var text=document.createTextNode(obj.objname+' '+obj.objmail);
-    li.innerText=obj.objname+' '+obj.objmail;
-
-    var deletebtn=document.createElement('button');
-    deletebtn.className='deletebtn';
-    deletebtn.style.color='white';
-    deletebtn.innerText='DELETE';
-    deletebtn.id=obj.objmail;
-    deletebtn.style.backgroundColor='blue';
-
-    deletebtn.addEventListener('click',()=>{
-        localStorage.removeItem(obj.objmail);
-        li.remove();
-    });
-
-    var editbtn=document.createElement('button');
-    editbtn.className='editbtn';
-    editbtn.style.color='white';
-    editbtn.innerText='EDIT';
-    editbtn.id=obj.objmail;
-    editbtn.style.backgroundColor='orange';
-
-    editbtn.addEventListener('click',()=>{
-        console.log(obj);
-        document.getElementById('name').value=obj.objname;
-        document.getElementById('email').value=obj.objmail;
-        li.remove();
-    });
-    console.log('hello');
-    li.appendChild(deletebtn);
-    li.appendChild(editbtn);
-    console.log(li);
-
-
-    userList.appendChild(li);
-
     
+    const parentNode=document.getElementById("list");
+    const childHTML=`<li id=${obj._id}>${obj.name} - ${obj.email}> 
+                        <button onclick=deleteUser('${obj._id}')>DELETE</button>
+                        <button onclick=editUser('${obj._id}')>EDIT</button>
+                        </li>`
+
+    parentNode.innerHTML = parentNode.innerHTML +childHTML;
 
 }
 
+function deleteUser(userId){
+    axios.delete(`https://crudcrud.com/api/07c403bb41334e1d84af1380eb51c834/appointmentData/${userId}`)
+        .then((response)=>{
+            console.log(response);
+            removeUserFromScreen(userId);
+        })
+        .catch((error)=>{
+            document.body.innerHTML=document.body.innerHTML+"<h4> SOMETHING WENT WRONG </h4>";
+            console.log(error);
+        });
+}
+
 // this below function is for ux to be updated in case same unique email is used for diffrent name, so what we do is remove that li element and add the new one
-function removeUserFromScreen(email){
-    var parentNode=document.getElementById('list');
-    var childNodeToBeDeleted=document.getElementById(email);
+function removeUserFromScreen(userId){
+    const parentNode=document.getElementById('list');
+    const childNodeToBeDeleted=document.getElementById(userId);
     if(childNodeToBeDeleted){
         parentNode.removeChild(childNodeToBeDeleted);
     }
@@ -106,7 +77,7 @@ document.addEventListener('DOMContentLoaded',refresh);
 function refresh(e){
     e.preventDefault();
     
-    axios.get("https://crudcrud.com/api/ff245ab1c87643bca788d9b17afd056b/appointmentData")
+    axios.get("https://crudcrud.com/api/07c403bb41334e1d84af1380eb51c834/appointmentData")
         .then((response)=>{
             console.log(response.data);
 
