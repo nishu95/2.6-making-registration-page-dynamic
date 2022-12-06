@@ -16,7 +16,7 @@ function addlocal(e){
     };
 
     // network call to crudcrud
-    axios.post("https://crudcrud.com/api/07c403bb41334e1d84af1380eb51c834/appointmentData",object)
+    axios.post("https://crudcrud.com/api/424368dcd3e24afe92d1fe977a05eca9/appointmentData",object)
         .then((response)=>{
             showNewUserOnTheScreen(response.data);
             console.log(response);
@@ -42,17 +42,31 @@ function addlocal(e){
 function showNewUserOnTheScreen(obj){
     
     const parentNode=document.getElementById("list");
-    const childHTML=`<li id=${obj._id}>${obj.name} - ${obj.email}> 
+    const childHTML=`<li id=${obj._id}>${obj.name} - ${obj.email}
                         <button onclick=deleteUser('${obj._id}')>DELETE</button>
-                        <button onclick=editUser('${obj._id}')>EDIT</button>
+                        <button onclick=editUser('${obj._id}','${obj.name}','${obj.email}')>EDIT</button>
                         </li>`
 
     parentNode.innerHTML = parentNode.innerHTML +childHTML;
 
 }
 
+
+ 
+    
+function editUser(UserId,Name,emailId){
+        document.getElementById("email").value=emailId;
+        document.getElementById("name").value=Name;
+    
+        deleteUser(UserId);
+}
+    
+    
+    
+    
+
 function deleteUser(userId){
-    axios.delete(`https://crudcrud.com/api/07c403bb41334e1d84af1380eb51c834/appointmentData/${userId}`)
+    axios.delete(`https://crudcrud.com/api/424368dcd3e24afe92d1fe977a05eca9/appointmentData/${userId}`)
         .then((response)=>{
             console.log(response);
             removeUserFromScreen(userId);
@@ -77,7 +91,7 @@ document.addEventListener('DOMContentLoaded',refresh);
 function refresh(e){
     e.preventDefault();
     
-    axios.get("https://crudcrud.com/api/07c403bb41334e1d84af1380eb51c834/appointmentData")
+    axios.get("https://crudcrud.com/api/424368dcd3e24afe92d1fe977a05eca9/appointmentData")
         .then((response)=>{
             console.log(response.data);
 
